@@ -24,6 +24,7 @@ async function calc() {
     if (system == "last") last = 100;
     if (system == "number") last = 0;
     for (let i = start; i <= fAmount; i++) {
+        var cTime = getCurrentDateByMilSec(new Date());
         var current;
         if (sq === "nr") current = i;
         if (sq === "sq") current = Math.sqrt(i);
@@ -83,7 +84,8 @@ async function calc() {
         refresh(n, g, r, rr, currentAmount, maxFilePerSecound, fAmount);
         if (waiter > maxFilePerSecound) {
             waiter = 0;
-            await timeout(600);
+            var time = getCurrentDateByMilSec(new Date()) - cTime;
+            await timeout(1000 - time);
         }
     }
     console.log(stats);
@@ -114,6 +116,10 @@ async function calc() {
     link.click();
     //await timeout(2500);
     //saveIntoTable("even", nStats);
+}
+
+function getCurrentDateByMilSec(d) {
+    return ((d.getHours() * 60 + d.getMinutes()) * 60 + d.getSeconds()) + d.milsec;
 }
 
 function timeout(ms) {
@@ -148,7 +154,7 @@ function saveIntoTable(id, data) {
 }
 
 function estimatedTime(totalAmount, amount, maxFilePerSecound) {
-    var t = Math.round((totalAmount - amount) / maxFilePerSecound);
+    var t = Math.round(((totalAmount - amount) / maxFilePerSecound) / 2);
     if (t < 0) t = 0;
 
 
@@ -175,8 +181,8 @@ function estimatedTime(totalAmount, amount, maxFilePerSecound) {
 }
 
 function refresh(n, g, r, rr, amount, maxFilePerSecound, totalAmount) {
-    window.document.querySelector("[c-display]").textContent = "Anzahl:     " + amount;
-    window.document.querySelector("[c-time]").textContent = "Estimated time: " + estimatedTime(totalAmount, amount, maxFilePerSecound);
+    window.document.querySelector("[c-display]").textContent = amount;
+    window.document.querySelector("[c-time]").textContent = estimatedTime(totalAmount, amount, maxFilePerSecound);
     window.document.querySelector("[n-amount-display]").textContent = n;
     window.document.querySelector("[g-amount-display]").textContent = g;
     window.document.querySelector("[r-amount-display]").textContent = r;
