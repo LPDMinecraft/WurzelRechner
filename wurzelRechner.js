@@ -104,7 +104,7 @@ async function calc() {
     else if(system == "number") fileName = fileName + "number-";
 
     if(sq == "nr") fileName = fileName + "nr-";
-    else if(sq == "sq") fileName = fileName + "sq";
+    else if(sq == "sq") fileName = fileName + "sq-";
 
     fileName = fileName + version + ".csv";
 
