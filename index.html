@@ -1,0 +1,80 @@
+<html>
+
+<head>
+    <title>HowMany</title>
+    <link rel="stylesheet" href="style.css">
+    <script type="text/javascript" src="wurzelRechner.js"></script>
+</head>
+
+<body>
+    <center class="center">
+        <table>
+            <tr>
+                <td>Start Amount</td>
+                <td>Loop Amount</td>
+                <td>Type</td>
+                <td>Version</td>
+            </tr>
+            <tr>
+                <td><input type="number" start placeholder="start" value="0"></td>
+                <td><input type="number" number placeholder="amount" value="100000"></td>
+                <td>
+                    <select>
+                        <option option-pro>Procent</option>
+                        <option option-las>Last</option>
+                        <option option-num>Number</option>
+                    </select>
+                </td>
+                <td><input type="text" version placeholder="Version" value="1.0.0"></td>
+            </tr>
+        </table>
+        <p c-display>Anzahl: n/a</p>
+        <table>
+            <tr>
+                <td></td>
+                <td>Anzahl</td>
+                <td>Prozent<br>(zum Gesamten)</td>
+            </tr>
+            <tr>
+                <td>Natürliche</td>
+                <td>
+                    <p n-amount-display>n/a</p>
+                </td>
+                <td>
+                    <p n-procent-display>n/a</p>
+                </td>
+            </tr>
+            <tr>
+                <td>Ganze</td>
+                <td>
+                    <p g-amount-display>n/a</p>
+                </td>
+                <td>
+                    <p g-procent-display>n/a</p>
+                </td>
+            </tr>
+            <tr>
+                <td>Rationale</td>
+                <td>
+                    <p r-amount-display>n/a</p>
+                </td>
+                <td>
+                    <p r-procent-display>n/a</p>
+                </td>
+            </tr>
+            <tr>
+                <td>Reele</td>
+                <td>
+                    <p rr-amount-display>n/a</p>
+                </td>
+                <td>
+                    <p rr-procent-display>n/a</p>
+                </td>
+            </tr>
+        </table>
+        <button onclick='calc();'>Calculate</button>
+        <table id="even"></table>
+    </center>
+</body>
+
+</html>
