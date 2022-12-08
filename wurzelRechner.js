@@ -1,52 +1,93 @@
 async function calc() {
     var n = 0, g = 0, r = 0, rr = 0, amount = (window.document.querySelector("[number]").value * 1), currentAmount = 0;
-    var sq = true, log = false, system = "procent";
+    var sq = "sq", log = true, system = "procent", numType = "N";
     if(window.document.querySelector("[option-pro]").selected) system = "procent";
     if(window.document.querySelector("[option-las]").selected) system = "last";
     if(window.document.querySelector("[option-num]").selected) system = "number";
+
+    if(window.document.querySelector("[option-n]").selected) numType = "N";
+    if(window.document.querySelector("[option-g]").selected) numType = "G";
+    if(window.document.querySelector("[option-r]").selected) numType = "R";
+    if(window.document.querySelector("[option-rr]").selected) numType = "RR";
+
+    log = window.document.querySelector("[debbug]").checked;
+    if(window.document.querySelector("[option-nro]").selected) sq = "nr";
+    if(window.document.querySelector("[option-sqr]").selected) sq = "sq";
+
     var waiter = 0; 
-    var nStats = [];
+    var stats = [];
     var start = (window.document.querySelector("[start]").value * 1);
     var fAmount = start + amount;
-    nStats.push(["Zahl", "Wert"]);
+    stats.push(["Zahl", "Wert"]);
     var last = 100;
     if(system == "last") last = 100;
     if(system == "number") last = 0;
     for (let i = start; i <= fAmount; i++) {
-        var current = Math.sqrt(i);
-        if (!sq) current = i;
+        var current;
+        if (sq === "nr") current = i;
+        if (sq === "sq") current = Math.sqrt(i);
+        
         if (Number.isInteger(current) && i > 0) {
             if (log) console.log(i + " N - " + current);
-            if(system == "last") last = 100;
-            if(system == "number") last++;
+            if(numType === "N") {
+                if(system == "last") last = 100;
+                if(system == "number") last++;
+            } else {
+                if(system == "last") last = last - 1;
+            }
             n++;
         } else if (Number.isInteger(current)) {
             if (log) console.log(i + " G - " + current);
-            if(system == "last") last = last - 1;
+            if(numType == "G") {
+                if(system == "last") last = 100;
+                if(system == "number") last++;
+            } else {
+                if(system == "last") last = last - 1;
+            }
             g++;
         } else if (!Number.isInteger(current)) {
             if (log) console.log(i + " R - " + current);
-            if(system == "last") last = last - 1;
+            if(numType == "R") {
+                if(system == "last") last = 100;
+                if(system == "number") last++;
+            } else {
+                if(system == "last") last = last - 1;
+            }
             r++;
         } else if (!Number.isInteger(current) && isFinite(current)) {
             if(log) console.log(i + " RR - " + current);
-            if(system == "last") last = last - 1;
+            if(numType == "RR") {
+                if(system == "last") last = 100;
+                if(system == "number") last++;
+            } else {
+                if(system == "last") last = last - 1;
+            }
             rr++;
         }
         currentAmount++;
         waiter++;
-        if(system == "procent") nStats.push([i, procent(n, currentAmount)]);
-        if(system == "last") nStats.push([i, last]);
-        if(system == "number") nStats.push([i, last]);
+        if(system == "procent") {
+            if(numType == "N") {
+                stats.push([i, procent(n, currentAmount)]);
+            } else if(numType == "G") {
+                stats.push([i, procent(g, currentAmount)]);
+            } else if(numType == "R") {
+                stats.push([i, procent(r, currentAmount)]);
+            } else if(numType == "RR") {
+                stats.push([i, procent(rr, currentAmount)]);
+            }
+        }
+        if(system == "last") stats.push([i, last]);
+        if(system == "number") stats.push([i, last]);
         refresh(n, g, r, rr, currentAmount);
         if(waiter > 25000) {
             await timeout(200);
             waiter = 0;
         }
     }
-    console.log(nStats);
+    console.log(stats);
 
-    let csvContent = "data:text/csv;charset=utf-8," + nStats.map(e => e.join(",")).join("\n");
+    let csvContent = "data:text/csv;charset=utf-8," + stats.map(e => e.join(",")).join("\n");
     var encodedUri = encodeURI(csvContent);
     var link = document.createElement("a");
     var version = "v" + window.document.querySelector("[version]").value;

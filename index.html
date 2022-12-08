@@ -12,12 +12,23 @@
             <tr>
                 <td>Start Amount</td>
                 <td>Loop Amount</td>
-                <td>Type</td>
+                <td>Type (Number)</td>
+                <td>Type (Search)</td>
+                <td>Type (Calcutlate)</td>
                 <td>Version</td>
+                <td>Debbug Log</td>
             </tr>
             <tr>
                 <td><input type="number" start placeholder="start" value="0"></td>
                 <td><input type="number" number placeholder="amount" value="100000"></td>
+                <td>
+                    <select>
+                        <option option-n>Natürliche Zahlen</option>
+                        <option option-g>Ganze Zahlen</option>
+                        <option option-r>Rationale Zahlen</option>
+                        <option option-rr>Reele Zahlen</option>
+                    </select>
+                </td>
                 <td>
                     <select>
                         <option option-pro>Procent</option>
@@ -25,7 +36,14 @@
                         <option option-num>Number</option>
                     </select>
                 </td>
+                <td>
+                    <select>
+                        <option option-nro>Normal</option>
+                        <option option-sqr>Square Root</option>
+                    </select>
+                </td>
                 <td><input type="text" version placeholder="Version" value="1.0.0"></td>
+                <td><input type="checkbox" debbug></td>
             </tr>
         </table>
         <p c-display>Anzahl: n/a</p>
@@ -33,7 +51,7 @@
             <tr>
                 <td></td>
                 <td>Anzahl</td>
-                <td>Prozent<br>(zum Gesamten)</td>
+                <td>Procent<br>(total)</td>
             </tr>
             <tr>
                 <td>Natürliche</td>
