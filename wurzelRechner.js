@@ -92,9 +92,23 @@ async function calc() {
     var link = document.createElement("a");
     var version = "v" + window.document.querySelector("[version]").value;
     link.setAttribute("href", encodedUri);
-    if(system == "procent") link.setAttribute("download", "florish-procent-" + version + "-" + amount + ".csv");
-    else if(system == "last") link.setAttribute("download", "florish-last-" + version + "-" + amount + ".csv");
-    else if(system == "number") link.setAttribute("download", "florish-number-" + version + "-" + amount + ".csv");
+    var fileName = "flourish-" + start + "-" + amount + "-";
+
+    if(numType == "N") fileName = fileName + "N-";
+    else if(numType == "G") fileName = fileName + "G-";
+    else if(numType == "R") fileName = fileName + "R-";
+    else if(numType == "RR") fileName = fileName + "RR-";
+
+    if(system == "procent") fileName = fileName + "procent-";
+    else if(system == "last") fileName = fileName + "last-";
+    else if(system == "number") fileName = fileName + "number-";
+
+    if(sq == "nr") fileName = fileName + "nr-";
+    else if(sq == "sq") fileName = fileName + "sq";
+
+    fileName = fileName + version + ".csv";
+
+    link.setAttribute("download", fileName);
     document.body.appendChild(link);
     link.click();
     //await timeout(2500);
