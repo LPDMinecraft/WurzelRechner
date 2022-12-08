@@ -1,7 +1,8 @@
 async function calc() {
+    var eTime = getCurrentDateByMilSec(new Date());
     var n = 0, g = 0, r = 0, rr = 0, amount = (window.document.querySelector("[number]").value * 1), currentAmount = 0;
     var sq = "sq", log = true, system = "procent", numType = "N";
-    var maxFilePerSecound = 25000;
+    var maxFilePerSecound = 20000;
     if (window.document.querySelector("[option-pro]").selected) system = "procent";
     if (window.document.querySelector("[option-las]").selected) system = "last";
     if (window.document.querySelector("[option-num]").selected) system = "number";
@@ -81,7 +82,8 @@ async function calc() {
         }
         if (system == "last") stats.push([i, last]);
         if (system == "number") stats.push([i, last]);
-        refresh(n, g, r, rr, currentAmount, maxFilePerSecound, fAmount);
+        console.log(getCurrentDateByMilSec(new Date()));
+        refresh(n, g, r, rr, currentAmount, maxFilePerSecound, fAmount, ((getCurrentDateByMilSec(new Date()) - eTime) / 2));
         if (waiter > maxFilePerSecound) {
             waiter = 0;
             var time = getCurrentDateByMilSec(new Date()) - cTime;
@@ -118,8 +120,8 @@ async function calc() {
     //saveIntoTable("even", nStats);
 }
 
-function getCurrentDateByMilSec(d) {
-    return ((d.getHours() * 60 + d.getMinutes()) * 60 + d.getSeconds()) + d.milsec;
+function getCurrentDateByMilSec(date) {
+    return date.getTime();
 }
 
 function timeout(ms) {
@@ -154,12 +156,12 @@ function saveIntoTable(id, data) {
 }
 
 function estimatedTime(totalAmount, amount, maxFilePerSecound) {
-    var t = Math.round(((totalAmount - amount) / maxFilePerSecound) / 2);
+    var t = Math.round(((totalAmount - amount) / maxFilePerSecound) / 1);
     if (t < 0) t = 0;
-
-
-    var d = new Date(t * 1000);
-    console.log(t);
+    return par(t * 1000);
+}
+function par(t) {
+    var d = new Date(t);
     var hr = (d.getHours() - 1);
     if (hr < 10) {
         hr = "0" + hr;
@@ -180,7 +182,8 @@ function estimatedTime(totalAmount, amount, maxFilePerSecound) {
     return hr + ":" + min + ":" + sec;
 }
 
-function refresh(n, g, r, rr, amount, maxFilePerSecound, totalAmount) {
+function refresh(n, g, r, rr, amount, maxFilePerSecound, totalAmount, etime) {
+    window.document.querySelector("[c-etime]").textContent = par(etime);
     window.document.querySelector("[c-display]").textContent = amount;
     window.document.querySelector("[c-time]").textContent = estimatedTime(totalAmount, amount, maxFilePerSecound);
     window.document.querySelector("[n-amount-display]").textContent = n;

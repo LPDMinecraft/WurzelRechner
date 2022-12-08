@@ -5,16 +5,21 @@
 * {
     font-size: 20px;
 }
+body {
+    background-color: white;
+}
 p {
     font-size: 50px;
     color: black;
 }
-
-table {
-    width: 900px;
+.left {
+    text-align: left;
 }
-
+.right {
+    text-align: right;
+}
 button {
+    margin-top: 75px;
     width: 20%;
     height: 10%;
     border-radius: 15px;
@@ -24,20 +29,18 @@ button {
     background-color: rgb(127, 255, 212);
     font-size: 170%;
 }
-
 button:hover {
     background-color: rgba(127, 255, 212, 0.4);
 }
-
 button:active {
     border-bottom: none;
     border-right: none;
 }
 
-body {
-    background-color: white;
+table {
+    width: 1300px;
 }
-
 td {
     width: 33.3%;
+    text-align: center;
 }
