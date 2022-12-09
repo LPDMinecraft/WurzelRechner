@@ -109,6 +109,8 @@ function getAllLocaleSwitcherButtonsInIframes(iframe) {
 // File System
 
 // TODO: Add a system so, every categorie is stored in each folder
+// TODO: With a for loop!
+//
 // Example:
 //
 // lang
