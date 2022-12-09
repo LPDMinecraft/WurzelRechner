@@ -19,6 +19,8 @@ function getUtils() {
 
 
 window.addEventListener("load", (e) => {
+    setLocale(defaultLocale);
+
     initVariables();
     windowRefresher();
 });
