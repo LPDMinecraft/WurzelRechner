@@ -216,6 +216,14 @@ class Utils {
 class NumberManager {
     constructor() {}
 
+    countDecimals(value) {
+        if(Math.floor(value) === value) return 0;
+        return value.toString().split(".")[1].length || 0; 
+    }
+    hasDecimals(value, lenght) {
+        return this.countDecimals(value) == lenght;
+    }
+
     number(current, i) {
         if (this.isNatuerlicheZahl(current)) {
             if (log) console.log(i + " N - " + current);
@@ -262,10 +270,10 @@ class NumberManager {
         return Number.isInteger(current);
     }
     isRationaleZahl(current) {
-        return !Number.isInteger(current);
+        return !Number.isInteger(current) && !this.hasDecimals(current, 12);
     }
     isReeleZahl(current) {
-        return !Number.isInteger(current) && isFinite(current);
+        return !Number.isInteger(current) && this.hasDecimals(current, 12);
     }
 }
 
