@@ -1,8 +1,11 @@
 var maxFilePerSecound, maxFileWriter, eTime, n, g, r, rr, amount, eTime, currentAmount, fAmount, npsStats, sq, log, system, numType, stats, waiter, cTime, current, start, last;
-var timeManagerClass, waitManagerClass, utilsClass;
+var numberManagerClass, timeManagerClass, waitManagerClass, utilsClass;
 
 
 
+function getNumberManager() {
+    return numberManagerClass;
+}
 function getTimeManager() {
     return timeManagerClass;
 }
@@ -23,6 +26,7 @@ window.addEventListener("load", (e) => {
 
 
 function initVariables() {
+    numberManagerClass = new NumberManager();
     timeManagerClass = new TimeManager();
     waitManagerClass = new WaitManager();
     utilsClass = new Utils();
@@ -77,45 +81,8 @@ async function generateNumbers() {
             maxFileWriter = 0;
             maxFilePerSecound = getTimeManager().refreshMaxItemsPerSec();
         }
-
+        getNumberManager().number(current, i);
         
-        if (Number.isInteger(current) && i > 0) {
-            if (log) console.log(i + " N - " + current);
-            if (numType === "N") {
-                if (system == "last") last = 100;
-                if (system == "number") last++;
-            } else {
-                if (system == "last") last = last - 1;
-            }
-            n++;
-        } else if (Number.isInteger(current)) {
-            if (log) console.log(i + " G - " + current);
-            if (numType == "G") {
-                if (system == "last") last = 100;
-                if (system == "number") last++;
-            } else {
-                if (system == "last") last = last - 1;
-            }
-            g++;
-        } else if (!Number.isInteger(current)) {
-            if (log) console.log(i + " R - " + current);
-            if (numType == "R") {
-                if (system == "last") last = 100;
-                if (system == "number") last++;
-            } else {
-                if (system == "last") last = last - 1;
-            }
-            r++;
-        } else if (!Number.isInteger(current) && isFinite(current)) {
-            if (log) console.log(i + " RR - " + current);
-            if (numType == "RR") {
-                if (system == "last") last = 100;
-                if (system == "number") last++;
-            } else {
-                if (system == "last") last = last - 1;
-            }
-            rr++;
-        }
         currentAmount++;
         waiter++;
 
@@ -243,6 +210,50 @@ class Utils {
     procent(first, secound) {
         var num = (first / secound) * 100;
         return (Math.round(num * 1000000) / 1000000).toFixed(6);
+    }
+}
+
+class NumberManager {
+    constructor() {}
+
+    number(current, i) {
+        if (Number.isInteger(current) && i > 0) {
+            if (log) console.log(i + " N - " + current);
+            if (numType === "N") {
+                if (system == "last") last = 100;
+                if (system == "number") last++;
+            } else {
+                if (system == "last") last = last - 1;
+            }
+            n++;
+        } else if (Number.isInteger(current)) {
+            if (log) console.log(i + " G - " + current);
+            if (numType == "G") {
+                if (system == "last") last = 100;
+                if (system == "number") last++;
+            } else {
+                if (system == "last") last = last - 1;
+            }
+            g++;
+        } else if (!Number.isInteger(current)) {
+            if (log) console.log(i + " R - " + current);
+            if (numType == "R") {
+                if (system == "last") last = 100;
+                if (system == "number") last++;
+            } else {
+                if (system == "last") last = last - 1;
+            }
+            r++;
+        } else if (!Number.isInteger(current) && isFinite(current)) {
+            if (log) console.log(i + " RR - " + current);
+            if (numType == "RR") {
+                if (system == "last") last = 100;
+                if (system == "number") last++;
+            } else {
+                if (system == "last") last = last - 1;
+            }
+            rr++;
+        }
     }
 }
 
