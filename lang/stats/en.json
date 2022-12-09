@@ -1,0 +1,12 @@
+{
+    "variables": {
+        "startAmount": "Start Amount",
+        "loopAmount": "Loop Amount",
+        "numberType": "Type (number)",
+        "searchType": "Type (search)",
+        "calculateType": "Type (calculate)",
+        "version": "Version",
+        "debugLog": "Debbug Log",
+        "changeLang": "Change Language"
+    }
+}

@@ -14,7 +14,7 @@ async function setLocale(newLocale) {
 
     translations = newTranslations;
     locale = newLocale;
-    
+
     translatePage();
     bindLocaleSwitcher(locale);
 
@@ -35,7 +35,7 @@ function supportedOrDefault(locales) {
 }
 function browserLocales(languageCodeOnly = false) {
     return navigator.languages.map((locale) =>
-      languageCodeOnly ? locale.split("-")[0] : locale,
+        languageCodeOnly ? locale.split("-")[0] : locale,
     );
 }
 
@@ -63,7 +63,8 @@ function registerButton(currentButton, lang) {
     currentButton.onchange = (e) => {
         setLocale(e.target.value);
         setTimeout(() => {
-            refresh();
+            // Here you can set everything you want to reload after setting new languages
+            // Example: refresh();
         }, 100);
     };
 }
@@ -93,9 +94,9 @@ function getAllLocaleSwitcherButtonsInIframes(iframe) {
     console.log(buttons);
 
     var ownIframes = iframe.contentDocument.querySelectorAll('iframe');
-    if(ownIframes.length > 0) {
-        for(var currentFrame of ownIframes) {
-            if(currentFrame.contentDocument.querySelectorAll("[data-i18n-switcher]").length > 0) {
+    if (ownIframes.length > 0) {
+        for (var currentFrame of ownIframes) {
+            if (currentFrame.contentDocument.querySelectorAll("[data-i18n-switcher]").length > 0) {
                 buttons = mergeTogether(buttons, getAllLocaleSwitcherButtonsInIframes(currentFrame));
             }
         }
@@ -126,38 +127,64 @@ function getAllLocaleSwitcherButtonsInIframes(iframe) {
 // --> footer
 //     --> de.json
 //     --> en.json
+function getAllCategories() {
+    return ["toolbar", "stats", "table", "footer"];
+}
+function getCategorieByID(id) {
+    return getAllCategories()[id];
+}
+function getIDByCategory(category) {
+    for(var i = 0; i < sizeAllCategories(); i++) {
+        var currentCat = getCategorieByID(i);
+        if(category === currentCat) return i;
+    }
+    return 0;
+}
+function sizeAllCategories() {
+    return getAllCategories().length;
+}
 
 
 
 async function fetchTranslationsFor(newLocale) {
-    var defpath = `../lang/${newLocale}.json`;
-    var path = ``;
-    var found = false;
+    var categories = getAllCategories();
+    var responses = {};
 
-    const response = await fetch(defpath);
-    while(found) {
-        response = fetch(path + defpath);
-        if(doesFileExist(path + defpath)) {
-            found = true;
+    for (var i = 0; i < sizeAllCategories(); i++) {
+        var currentCategorie = categories[i];
+        var defpath = `../lang/` + currentCategorie + `/${newLocale}.json`;
+        var path = ``;
+        var found = false;
+
+        const response = await fetch(defpath);
+        while (found) {
+            response = fetch(path + defpath);
+            if (doesFileExist(path + defpath)) {
+                found = true;
+            }
+            path = path + `../`;
+            response = fetch(path + defpath);
+            if (doesFileExist(path + defpath)) {
+                found = true;
+            }
         }
-        path = path + `../`;
-        response = fetch(path + defpath);
-        if(doesFileExist(path + defpath)) {
-            found = true;
-        }
+        var json = await response.json();
+
+        console.log("Working with file:");
+        console.log(response.url);
+        console.log("Working with response:");
+        console.log(response);
+        responses[currentCategorie] = json;
     }
-    console.log("Working with file:");
-    console.log(response.url);
-    console.log("Working with response:");
-    console.log(response);
-    return await response.json();
+
+    return responses;
 }
 
 function doesFileExist(urlToFile) {
     var xhr = new XMLHttpRequest();
     xhr.open('HEAD', urlToFile, false);
     xhr.send();
-     
+
     if (xhr.status == "404") {
         return false;
     } else {
@@ -196,10 +223,10 @@ function getAllTranslableElements() {
 }
 function mergeTogether(input, output) {
     var merged = [];
-    for(var i = 0; output.length > i; i++) {
+    for (var i = 0; output.length > i; i++) {
         merged[i] = output[i];
     }
-    for(var i = 0; input.length > i; i++) {
+    for (var i = 0; input.length > i; i++) {
         merged[i + output.length] = input[i];
     }
     return merged;
@@ -209,8 +236,8 @@ function searchInIframe(iframe) {
     var allI18n = [];
     allIFrames[0] = iframe;
 
-    if(iframe.contentDocument.querySelectorAll('iframe').length > 0) {
-        iframe.contentDocument.querySelectorAll('iframe').forEach(currentIframe => 
+    if (iframe.contentDocument.querySelectorAll('iframe').length > 0) {
+        iframe.contentDocument.querySelectorAll('iframe').forEach(currentIframe =>
             allIFrames[Object.keys(allIFrames).length] = currentIframe,
         );
     }
@@ -221,12 +248,12 @@ function searchInIframe(iframe) {
     allI18n = iframe.contentDocument.querySelectorAll("[data-i18n]");
     console.log(allI18n);
 
-    if(Object.keys(allIFrames).length > 1) {
+    if (Object.keys(allIFrames).length > 1) {
         console.log("");
-        for(var i = 1; i < Object.keys(allIFrames).length; i++) {
+        for (var i = 1; i < Object.keys(allIFrames).length; i++) {
             var currentIframe = allIFrames[i];
             var currentIframeTranslations = searchInIframe(currentIframe);
-            if(currentIframe.read != "no") {
+            if (currentIframe.read != "no") {
                 allI18n = mergeTogether(allI18n, currentIframeTranslations);
             }
         }
@@ -237,40 +264,42 @@ function searchInIframe(iframe) {
 
 function translateElement(element) {
     const path = element.getAttribute("data-i18n");
-    if(path.includes(":")) {
+    
+    if (path.includes(":")) {
         //const translation = translations[key][value];
         const key = path.split(":")[0];
         const value = path.split(":")[1];
-        translation = translations[key][value];
-        if(value.includes(".")) {
+        var cTranslation = Object.values(translations)[getIDByCategory(key)][key];
+        var translation = cTranslation[value];
+        if (value.includes(".")) {
             var splittedValue = value.split(".");
-            translation = translations[key];
-
-            for(var c of splittedValue) {
-                console.log(translation);
-                console.log(c);
-                if(translation[c] != undefined) {
-                    translation = translation[c];
-                } else {
-                    translation = undefined;
-                    break;
-                }
-            }
+            translation = Object.values(translations)[getIDByCategory(key)][key][key];
 
             console.log(" ");
             console.log("Finding Path");
             console.log("Key: " + key);
             console.log("Unproceeded Value: " + value);
             console.log("Splitted Value: " + splittedValue);
+
+            for (var c of splittedValue) {
+                console.log(translation);
+                console.log(c);
+                if (translation[c] != undefined) {
+                    translation = translation[c];
+                } else {
+                    translation = undefined;
+                    break;
+                }
+            }
         }
-    
+
         console.log(" ");
         console.log("Translating Object");
         console.log("Path: | " + path);
         console.log("Normal text: " + element.innerText);
         console.log("Translated text: " + translation);
 
-        if(translation != undefined) {
+        if (translation != undefined) {
             console.log(element.innerText);
             element.innerText = translation;
             console.log(element.innerText);

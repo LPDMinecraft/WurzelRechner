@@ -324,7 +324,7 @@ class TimeManager {
     }
 
     calcMaxItemsPerSec() {
-        var eTime = this.getCurrentDateByMilSec(new Date()), log2 = false;
+        var eTime = this.getCurrentDateByMilSec(new Date()), log2 = !log;
         let i = 0;
 
         if (log2) {
@@ -338,7 +338,7 @@ class TimeManager {
             var cTime = this.getCurrentDateByMilSec(new Date());
             var milSecsBetween = cTime - eTime;
             if (milSecsBetween < 325) {
-                console.log(milSecsBetween + " - " + eTime + " - " + cTime);
+                if(log2) console.log(milSecsBetween + " - " + eTime + " - " + cTime);
             } else {
                 if (log2) {
                     console.log(" ");
