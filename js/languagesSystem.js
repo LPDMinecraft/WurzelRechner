@@ -269,37 +269,39 @@ function translateElement(element) {
         //const translation = translations[key][value];
         const key = path.split(":")[0];
         const value = path.split(":")[1];
-        var cTranslation = Object.values(translations)[getIDByCategory(key)][key];
-        var translation = cTranslation[value];
-        if (value.includes(".")) {
-            var splittedValue = value.split(".");
-            translation = Object.values(translations)[getIDByCategory(key)][key][key];
-
-            console.log(" ");
-            console.log("Finding Path");
-            console.log("Key: " + key);
-            console.log("Unproceeded Value: " + value);
-            console.log("Splitted Value: " + splittedValue);
-
-            for (var c of splittedValue) {
-                console.log(translation);
-                console.log(c);
-                if (translation[c] != undefined) {
-                    translation = translation[c];
-                } else {
-                    translation = undefined;
-                    break;
-                }
-            }
-        }
+        var fileTranslationFinal = Object.values(translations)[getIDByCategory(key)];
+        var fileTranslation = Object.values(translations)[getIDByCategory(key)];
+        var translation = undefined;
 
         console.log(" ");
         console.log("Translating Object");
         console.log("Path: | " + path);
         console.log("Normal text: " + element.innerText);
-        console.log("Translated text: " + translation);
+        console.log(" ");
+        
+        if (value.includes(".")) {
+            var splittedValue = value.split("."); splittedValue[splittedValue.length] = undefined;
 
-        if (translation != undefined) {
+            console.log("Finding Path");
+            console.log("Key: " + key);
+            console.log("Unproceeded Value: " + value);
+            console.log("Splitted Value: " + splittedValue);
+            console.log(" ");
+
+            for (var c of splittedValue) {
+                if (fileTranslation[c] != undefined) {
+                    fileTranslation = fileTranslation[c];
+                } else {
+                    translation = fileTranslation;
+                    fileTranslation = fileTranslationFinal;
+                    break;
+                }
+            }
+        } else if (fileTranslationFinal != undefined) {
+            translation = fileTranslationFinal[value];
+        }
+        if(translation != undefined && !(translation instanceof Object)) {
+            console.log("Translated text: " + translation);
             console.log(element.innerText);
             element.innerText = translation;
             console.log(element.innerText);
@@ -307,11 +309,12 @@ function translateElement(element) {
             return true;
         }
     }
-    console.log(" ");
+    
     console.log("Cannot translate Object");
     console.log("Path: | " + path);
     console.log("Element:");
     console.log(element);
 
     element.innerText = element.innerText + " (No right translation found)";
+    return false;
 }
