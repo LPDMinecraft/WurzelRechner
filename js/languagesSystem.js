@@ -108,6 +108,23 @@ function getAllLocaleSwitcherButtonsInIframes(iframe) {
 
 // File System
 
+// TODO: Add a system so, every categorie is stored in each folder
+// Example:
+//
+// lang
+// --> toolbar
+//     --> de.json
+//     --> en.json
+// --> stats
+//     --> de.json
+//     --> en.json
+// --> table
+//     --> de.json
+//     --> en.json
+// --> footer
+//     --> de.json
+//     --> en.json
+
 
 
 async function fetchTranslationsFor(newLocale) {
