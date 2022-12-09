@@ -1,12 +1,10 @@
 {
-    "variables": {
-        "startAmount": "Start Zahl",
-        "loopAmount": "Loop Anzahl",
-        "numberType": "Typ (nummer)",
-        "searchType": "Typ (suche)",
-        "calculateType": "Typ (rechnen)",
-        "version": "Version",
-        "debugLog": "Debbug Log",
-        "changeLang": "Ändere die Sprache"
+    "words": {
+        "calc": "Berechnen"
+    },
+    "sentences": {
+        "press": "Warte auf den Knopfdruck",
+        "numbersPerSecound": "Nummern pro Sekunde: %n%",
+        "calculating": "Berechnen..."
     }
 }

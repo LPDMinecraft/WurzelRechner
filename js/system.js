@@ -142,8 +142,8 @@ function openNPSFile() {
 }
 
 async function windowRefresher() {
-    refreshWindow();
-    setTimeout(50, () => {
+    setTimeout(100, () => {
+        refreshWindow();
         windowRefresher();
     });
 }
@@ -324,7 +324,7 @@ class TimeManager {
     }
 
     calcMaxItemsPerSec() {
-        var eTime = this.getCurrentDateByMilSec(new Date()), log2 = !log;
+        var eTime = this.getCurrentDateByMilSec(new Date()), log2 = true;
         let i = 0;
 
         if (log2) {
@@ -355,13 +355,18 @@ class TimeManager {
     }
 
     refreshMaxItemsPerSec() {
-        window.document.querySelector("[calcTime]").textContent = "Calculating...";
+        window.document.querySelector("[calcTime]").textContent = getTranslation("footer:sentences.calculating").toString(); 
+        var calc = getTranslation("footer:sentences.numbersPerSecound").toString();
         var maxItemsPerSec = this.calcMaxItemsPerSec();
-        window.document.querySelector("[calcTime]").textContent = "Numbers per secound: " + maxItemsPerSec;
+
+        window.document.querySelector("[calcTime]").textContent = calc.replace("%n%", maxItemsPerSec);
 
         var pos = npsStats.length;
         npsStats.push([pos, maxItemsPerSec]);
         return maxItemsPerSec;
+    }
+    resetMaxItemsPerSecDisplay() {
+        window.document.querySelector("[calcTime]").textContent = getTranslation("footer:sentences.press").toString();
     }
 }
 
@@ -413,7 +418,10 @@ class TypeManager {
         if (log) console.log(stats);
         openFile();
         openNPSFile();
-    
+
+        setTimeout(1000 * 2, () => {
+            getTimeManager().resetMaxItemsPerSecDisplay();
+        });
         //saveIntoTable("even", nStats);
     }
     async generateNumbers_Last() {
@@ -452,6 +460,9 @@ class TypeManager {
         openFile();
         openNPSFile();
     
+        setTimeout(1000 * 2, () => {
+            getTimeManager().resetMaxItemsPerSecDisplay();
+        });
         //saveIntoTable("even", nStats);
     }
     async generateNumbers_Number() {
@@ -489,7 +500,10 @@ class TypeManager {
         if (log) console.log(stats);
         openFile();
         openNPSFile();
-    
+        
+        setTimeout(1000 * 2, () => {
+            getTimeManager().resetMaxItemsPerSecDisplay();
+        });
         //saveIntoTable("even", nStats);
     }
 }

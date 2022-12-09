@@ -56,25 +56,25 @@
         </table>
         <table>
             <tr>
-                <td><p class="left">Estimated time</p></td>
-                <td><p>Amount</p></td>
-                <td><p class="right">Time remaining</p></td>
+                <td><p data-i18n="stats:words.eTime" class="left">Estimated time</p></td>
+                <td><p data-i18n="stats:words.amount">Amount</p></td>
+                <td><p data-i18n="stats:words.rTime" class="right">Time remaining</p></td>
             </tr>
             <tr>
-                <td><p c-etime class="left">n/a</p></td>
-                <td><p c-display>n/a</p></td>
-                <td><p c-time class="right">n/a</p></td>
+                <td><p data-i18n="stats:words.na" c-etime class="left">n/a</p></td>
+                <td><p data-i18n="stats:words.na" c-display>n/a</p></td>
+                <td><p data-i18n="stats:words.na" c-time class="right">n/a</p></td>
             </tr>
         </table>
         <br><br><br>
         <table>
             <tr>
                 <td class="left"></td>
-                <td>Amount</td>
-                <td class="right">Procent<br>(total)</td>
+                <td data-i18n="table:words.amount">Amount</td>
+                <td data-i18n="table:words.procent" class="right">Procent<br>(total)</td>
             </tr>
             <tr>
-                <td class="left">Natural</td>
+                <td class="left" data-i18n="table:numbers.natural">Natural</td>
                 <td>
                     <p n-amount-display>n/a</p>
                 </td>
@@ -83,7 +83,7 @@
                 </td>
             </tr>
             <tr>
-                <td class="left">Whole</td>
+                <td class="left" data-i18n="table:numbers.whole">Whole</td>
                 <td>
                     <p g-amount-display>n/a</p>
                 </td>
@@ -92,7 +92,7 @@
                 </td>
             </tr>
             <tr>
-                <td class="left">Rational</td>
+                <td class="left" data-i18n="table:numbers.rational">Rational</td>
                 <td>
                     <p r-amount-display>n/a</p>
                 </td>
@@ -101,7 +101,7 @@
                 </td>
             </tr>
             <tr>
-                <td class="left">Reele</td>
+                <td class="left" data-i18n="table:numbers.reel">Reele</td>
                 <td>
                     <p rr-amount-display>n/a</p>
                 </td>
@@ -110,8 +110,8 @@
                 </td>
             </tr>
         </table>
-        <button onclick='generateNumbers();'>Calculate</button>
-        <p calcTime>Wating to press button</p>
+        <button data-i18n="footer:words.calc" onclick='generateNumbers();'>Calculate</button>
+        <p data-i18n="footer:sentences.press" calcTime>Wating to press button</p>
         <table id="even"></table>
     </center>
 </body>

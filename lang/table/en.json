@@ -1,12 +1,12 @@
 {
-    "variables": {
-        "startAmount": "Start Amount",
-        "loopAmount": "Loop Amount",
-        "numberType": "Type (number)",
-        "searchType": "Type (search)",
-        "calculateType": "Type (calculate)",
-        "version": "Version",
-        "debugLog": "Debbug Log",
-        "changeLang": "Change Language"
+    "words": {
+        "amount": "Amount",
+        "procent": "Procent"
+    },
+    "numbers": {
+        "natural": "Natrual N.",
+        "whole": "Whole N.",
+        "rational": "Rational N.",
+        "reel": "Reel N."
     }
 }

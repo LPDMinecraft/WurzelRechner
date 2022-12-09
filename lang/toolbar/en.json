@@ -12,7 +12,7 @@
     "numbers": {
         "natural": "Natural Number",
         "whole": "Whole Number",
-        "rational": "Ration Number",
+        "rational": "Rational Number",
         "reel": "Reel Number"
     },
     "types": {

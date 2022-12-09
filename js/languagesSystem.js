@@ -262,32 +262,23 @@ function searchInIframe(iframe) {
     return allI18n;
 }
 
-function translateElement(element) {
-    const path = element.getAttribute("data-i18n");
-    
-    if (path.includes(":")) {
-        //const translation = translations[key][value];
-        const key = path.split(":")[0];
+function getTranslation(path) {
+    const key = path.split(":")[0];
         const value = path.split(":")[1];
+        
         var fileTranslationFinal = Object.values(translations)[getIDByCategory(key)];
         var fileTranslation = Object.values(translations)[getIDByCategory(key)];
         var translation = undefined;
-
-        console.log(" ");
-        console.log("Translating Object");
-        console.log("Path: | " + path);
-        console.log("Normal text: " + element.innerText);
-        console.log(" ");
-        
+    
         if (value.includes(".")) {
             var splittedValue = value.split("."); splittedValue[splittedValue.length] = undefined;
-
+    
             console.log("Finding Path");
             console.log("Key: " + key);
             console.log("Unproceeded Value: " + value);
             console.log("Splitted Value: " + splittedValue);
             console.log(" ");
-
+    
             for (var c of splittedValue) {
                 if (fileTranslation[c] != undefined) {
                     fileTranslation = fileTranslation[c];
@@ -297,19 +288,38 @@ function translateElement(element) {
                     break;
                 }
             }
-        } else if (fileTranslationFinal != undefined) {
+            if(translation != undefined && !(translation instanceof Object)) {
+                return translation;
+            }
+        } else if (fileTranslationFinal != undefined && fileTranslationFinal[value] != undefined && !(fileTranslationFinal[value] instanceof Object)) {
             translation = fileTranslationFinal[value];
+            return translation;
         }
         if(translation != undefined && !(translation instanceof Object)) {
-            console.log("Translated text: " + translation);
-            console.log(element.innerText);
-            element.innerText = translation;
-            console.log(element.innerText);
-
-            return true;
+            return translation;
         }
-    }
+        return undefined;
+}
+function translateElement(element) {
+    const path = element.getAttribute("data-i18n");
     
+    var translation = getTranslation(path);
+
+    console.log(" ");
+    console.log("Translating Object");
+    console.log("Path: | " + path);
+    console.log("Normal text: " + element.innerText);
+    console.log(" ");
+
+    if(translation != undefined) {
+        console.log("Translated text: " + translation);
+        console.log(element.innerText);
+        element.innerText = translation;
+        console.log(element.innerText);
+
+        return true;
+    }
+
     console.log("Cannot translate Object");
     console.log("Path: | " + path);
     console.log("Element:");

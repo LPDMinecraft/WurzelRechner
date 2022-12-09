@@ -1,12 +1,12 @@
 {
-    "variables": {
-        "startAmount": "Start Zahl",
-        "loopAmount": "Loop Anzahl",
-        "numberType": "Typ (nummer)",
-        "searchType": "Typ (suche)",
-        "calculateType": "Typ (rechnen)",
-        "version": "Version",
-        "debugLog": "Debbug Log",
-        "changeLang": "Ändere die Sprache"
+    "words": {
+        "amount": "Anzahl",
+        "procent": "Prozent"
+    },
+    "numbers": {
+        "natural": "Natürliche Z.",
+        "whole": "Ganze Z.",
+        "rational": "Rationale Z.",
+        "reel": "Reele Z."
     }
 }
