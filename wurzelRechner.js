@@ -217,7 +217,7 @@ class NumberManager {
     constructor() {}
 
     number(current, i) {
-        if (Number.isInteger(current) && i > 0) {
+        if (this.isNatuerlicheZahl(current)) {
             if (log) console.log(i + " N - " + current);
             if (numType === "N") {
                 if (system == "last") last = 100;
@@ -226,7 +226,7 @@ class NumberManager {
                 if (system == "last") last = last - 1;
             }
             n++;
-        } else if (Number.isInteger(current)) {
+        } else if (this.isGanzeZahl(current)) {
             if (log) console.log(i + " G - " + current);
             if (numType == "G") {
                 if (system == "last") last = 100;
@@ -235,7 +235,7 @@ class NumberManager {
                 if (system == "last") last = last - 1;
             }
             g++;
-        } else if (!Number.isInteger(current)) {
+        } else if (this.isRationaleZahl(current)) {
             if (log) console.log(i + " R - " + current);
             if (numType == "R") {
                 if (system == "last") last = 100;
@@ -244,7 +244,7 @@ class NumberManager {
                 if (system == "last") last = last - 1;
             }
             r++;
-        } else if (!Number.isInteger(current) && isFinite(current)) {
+        } else if (this.isReeleZahl(current)) {
             if (log) console.log(i + " RR - " + current);
             if (numType == "RR") {
                 if (system == "last") last = 100;
@@ -254,6 +254,18 @@ class NumberManager {
             }
             rr++;
         }
+    }
+    isNatuerlicheZahl(current) {
+        return Number.isInteger(current) && current > 0;
+    }
+    isGanzeZahl(current) {
+        return Number.isInteger(current);
+    }
+    isRationaleZahl(current) {
+        return !Number.isInteger(current);
+    }
+    isReeleZahl(current) {
+        return !Number.isInteger(current) && isFinite(current);
     }
 }
 
