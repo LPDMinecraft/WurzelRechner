@@ -1,8 +1,47 @@
-async function calc() {
-    var eTime = getCurrentDateByMilSec(new Date());
-    var n = 0, g = 0, r = 0, rr = 0, amount = (window.document.querySelector("[number]").value * 1), currentAmount = 0;
-    var sq = "sq", log = true, system = "procent", numType = "N";
-    var maxFilePerSecound = 20000;
+var maxFilePerSecound, maxFileWriter, eTime, n, g, r, rr, amount, eTime, currentAmount, fAmount, npsStats, sq, log, system, numType, stats, waiter, cTime, current, start, last;
+var timeManagerClass, waitManagerClass, utilsClass;
+
+
+
+function getTimeManager() {
+    return timeManagerClass;
+}
+function getWaitManager() {
+    return waitManagerClass;
+}
+function getUtils() {
+    return utilsClass;
+}
+
+
+
+window.addEventListener("load", (e) => {
+    initVariables();
+    windowRefresher();
+});
+
+
+
+function initVariables() {
+    timeManagerClass = new TimeManager();
+    waitManagerClass = new WaitManager();
+    utilsClass = new Utils();
+
+
+
+    eTime = getTimeManager().getCurrentDateByMilSec();
+    n = 0, g = 0, r = 0, rr = 0, 
+    amount = (window.document.querySelector("[number]").value * 1), 
+    currentAmount = 0;
+    sq = "sq", 
+    log = true,
+    system = "procent", 
+    npsStats = [],
+    numType = "N";
+    maxFilePerSecound = getTimeManager().refreshMaxItemsPerSec();
+
+    
+
     if (window.document.querySelector("[option-pro]").selected) system = "procent";
     if (window.document.querySelector("[option-las]").selected) system = "last";
     if (window.document.querySelector("[option-num]").selected) system = "number";
@@ -12,24 +51,34 @@ async function calc() {
     if (window.document.querySelector("[option-r]").selected) numType = "R";
     if (window.document.querySelector("[option-rr]").selected) numType = "RR";
 
-    log = window.document.querySelector("[debbug]").checked;
+    log = window.document.querySelector("[loggin]").checked;
     if (window.document.querySelector("[option-nro]").selected) sq = "nr";
     if (window.document.querySelector("[option-sqr]").selected) sq = "sq";
 
-    var waiter = 0;
-    var stats = [];
-    var start = (window.document.querySelector("[start]").value * 1);
-    var fAmount = start + amount;
+    stats = [], start = (window.document.querySelector("[start]").value * 1);
+    waiter = 0, maxFileWriter = 0, fAmount = start + amount, last = 100;
     stats.push(["Zahl", "Wert"]);
-    var last = 100;
+
     if (system == "last") last = 100;
     if (system == "number") last = 0;
+}
+
+async function generateNumbers() {
+    initVariables();
+
     for (let i = start; i <= fAmount; i++) {
-        var cTime = getCurrentDateByMilSec(new Date());
-        var current;
+        cTime = getTimeManager().getCurrentDateByMilSec();
         if (sq === "nr") current = i;
         if (sq === "sq") current = Math.sqrt(i);
 
+        maxFileWriter = maxFileWriter + (0.4 / maxFilePerSecound);
+        // Normaly its 2.5
+        if(maxFileWriter > 2.5) {
+            maxFileWriter = 0;
+            maxFilePerSecound = getTimeManager().refreshMaxItemsPerSec();
+        }
+
+        
         if (Number.isInteger(current) && i > 0) {
             if (log) console.log(i + " N - " + current);
             if (numType === "N") {
@@ -69,64 +118,259 @@ async function calc() {
         }
         currentAmount++;
         waiter++;
+
+
         if (system == "procent") {
             if (numType == "N") {
-                stats.push([i, procent(n, currentAmount)]);
+                stats.push([i, getUtils().procent(n, currentAmount)]);
             } else if (numType == "G") {
-                stats.push([i, procent(g, currentAmount)]);
+                stats.push([i, getUtils().procent(g, currentAmount)]);
             } else if (numType == "R") {
-                stats.push([i, procent(r, currentAmount)]);
+                stats.push([i, getUtils().procent(r, currentAmount)]);
             } else if (numType == "RR") {
-                stats.push([i, procent(rr, currentAmount)]);
+                stats.push([i, getUtils().procent(rr, currentAmount)]);
             }
         }
         if (system == "last") stats.push([i, last]);
         if (system == "number") stats.push([i, last]);
-        console.log(getCurrentDateByMilSec(new Date()));
-        refresh(n, g, r, rr, currentAmount, maxFilePerSecound, fAmount, ((getCurrentDateByMilSec(new Date()) - eTime) / 2));
+
+
+        var currentMilSec = getTimeManager().getCurrentDateByMilSec();
+        if(log) console.log(currentMilSec);
+        refreshWindow();
         if (waiter > maxFilePerSecound) {
             waiter = 0;
-            var time = getCurrentDateByMilSec(new Date()) - cTime;
-            await timeout(1000 - time);
+            var time = currentMilSec - cTime;
+            await getWaitManager().timeoutWithAsync(500 - time);
         }
     }
-    console.log(stats);
+    if(log) console.log(stats);
+    openFile();
+    openNPSFile();
 
-    let csvContent = "data:text/csv;charset=utf-8," + stats.map(e => e.join(",")).join("\n");
-    var encodedUri = encodeURI(csvContent);
-    var link = document.createElement("a");
-    var version = "v" + window.document.querySelector("[version]").value;
-    link.setAttribute("href", encodedUri);
-    var fileName = "flourish-" + start + "-" + amount + "-";
-
-    if (numType == "N") fileName = fileName + "N-";
-    else if (numType == "G") fileName = fileName + "G-";
-    else if (numType == "R") fileName = fileName + "R-";
-    else if (numType == "RR") fileName = fileName + "RR-";
-
-    if (system == "procent") fileName = fileName + "procent-";
-    else if (system == "last") fileName = fileName + "last-";
-    else if (system == "number") fileName = fileName + "number-";
-
-    if (sq == "nr") fileName = fileName + "nr-";
-    else if (sq == "sq") fileName = fileName + "sq-";
-
-    fileName = fileName + version + ".csv";
-
-    link.setAttribute("download", fileName);
-    document.body.appendChild(link);
-    link.click();
-    //await timeout(2500);
     //saveIntoTable("even", nStats);
 }
 
-function getCurrentDateByMilSec(date) {
-    return date.getTime();
+function createFile() {
+    let 
+    csvContent = "data:text/csv;charset=utf-8," + stats.map(e => e.join(",")).join("\n"),
+    encodedUri = encodeURI(csvContent);
+
+    var 
+    version = "v" + window.document.querySelector("[version]").value, 
+    fileName = "flourish_____" + start + "_" + amount + "___";
+
+    if (numType == "N") fileName = fileName + "N_";
+    else if (numType == "G") fileName = fileName + "G_";
+    else if (numType == "R") fileName = fileName + "R_";
+    else if (numType == "RR") fileName = fileName + "RR_";
+
+    if (system == "procent") fileName = fileName + "procent_";
+    else if (system == "last") fileName = fileName + "last_";
+    else if (system == "number") fileName = fileName + "number_";
+
+    if (sq == "nr") fileName = fileName + "nr___";
+    else if (sq == "sq") fileName = fileName + "sq___";
+
+    fileName = fileName + version + ".csv";
+
+    return [encodedUri, fileName];
+}
+function openFile() {
+    var 
+    fileData = createFile(),
+    link = document.createElement("a");
+
+    link.setAttribute("href", fileData[0]);
+    link.setAttribute("download", fileData[1]);
+
+    document.body.appendChild(link);
+    link.click();
+    return fileData;
+}
+function createNPSFile() {
+    let 
+    csvContent = "data:text/csv;charset=utf-8," + npsStats.map(e => e.join(",")).join("\n"),
+    encodedUri = encodeURI(csvContent);
+
+    var fileName = "npsFile-" + (getTimeManager().getCurrentDateByMilSec() * 0);
+
+    return [encodedUri, fileName];
+}
+function openNPSFile() {
+    var 
+    fileData = createNPSFile(),
+    link = document.createElement("a");
+
+    link.setAttribute("href", fileData[0]);
+    link.setAttribute("download", fileData[1]);
+
+    document.body.appendChild(link);
+    link.click();
+    return fileData;
 }
 
-function timeout(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
+async function windowRefresher() {
+    refreshWindow();
+    setTimeout(50, () => {
+        windowRefresher();
+    });
 }
+
+async function refreshWindow() {
+    var currentMilSec = getTimeManager().getCurrentDateByMilSec();
+    var etime = ((currentMilSec - eTime) / 2);
+
+    if(etime > 0) window.document.querySelector("[c-etime]").textContent = getTimeManager().getHrMinSecMillisecFormat(etime);
+    window.document.querySelector("[c-display]").textContent = currentAmount;
+    window.document.querySelector("[c-time]").textContent = getTimeManager().calcRemainingTime(currentAmount, amount, maxFilePerSecound);
+    window.document.querySelector("[n-amount-display]").textContent = n;
+    window.document.querySelector("[g-amount-display]").textContent = g;
+    window.document.querySelector("[r-amount-display]").textContent = r;
+    window.document.querySelector("[rr-amount-display]").textContent = rr;
+
+    window.document.querySelector("[n-procent-display]").textContent = getUtils().procent(n, currentAmount) + "%";
+    window.document.querySelector("[g-procent-display]").textContent = getUtils().procent(g, currentAmount) + "%";
+    window.document.querySelector("[r-procent-display]").textContent = getUtils().procent(r, currentAmount) + "%";
+    window.document.querySelector("[rr-procent-display]").textContent = getUtils().procent(rr, currentAmount) + "%";
+}
+
+
+
+class Utils {
+    constructor() {}
+
+    procent(first, secound) {
+        var num = (first / secound) * 100;
+        return (Math.round(num * 1000000) / 1000000).toFixed(6);
+    }
+}
+
+class WaitManager {
+    constructor() {}
+    static done = true;
+
+    timeoutWithAsync(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
+    timeoutWithoutAsync(ms) {
+        WaitManager.done = false;
+        setTimeout(ms, () => {
+            done = true;
+        });
+    }
+    isDone() {
+        return done;
+    }
+}
+
+class TimeManager {
+    constructor() {}
+
+    getDateByMilSec(date) {
+        return date.getTime();
+    }
+    getCurrentDateByMilSec() {
+        return new Date();
+    }
+    getHrMinSecFormat(milisecounds) {
+        var d = new Date(milisecounds);
+        var format = "";
+
+        var hr = (d.getHours() - 1);
+        if (hr < 10) {
+            format = format + "0" + hr + ":";
+        } else if(hr < 1) {
+            format = format;
+        } else {
+            format = format + hr + ":";
+        }
+
+        var min = d.getMinutes();
+        if (min < 10) {
+            format = format + "0" + min + ":";
+        } else if(min < 1 && hr < 1) {
+            format = format;
+        } else {
+            format = format + min + ":";
+        }
+
+        var sec = d.getSeconds();
+        if (sec < 10) {
+            format = format + "0" + sec;
+        } else if (sec < 1 && min < 1) {
+            format = format;
+        } else {
+            format = format + sec;
+        }
+        return format;
+    }
+    getHrMinSecMillisecFormat(milisecounds) {
+        var d = new Date(milisecounds);
+        var format = this.getHrMinSecFormat(milisecounds);
+
+        var milsec = d.getMilliseconds();
+        if(milsec < 100) {
+            format = format + ":0" + milsec;
+        } else if(milsec < 10) {
+            format = format + ":00" + milsec;
+        } else if(milsec < 1) {
+            format = format;
+        } else {
+            format = format + ":" + milsec;
+        }
+
+        return format;
+    }
+    calcRemainingTime(amount, totalAmount, maxFilePerSecound) {
+        var t = Math.round(((totalAmount - amount) / maxFilePerSecound) / 1);
+        if (t < 0) t = 0;
+        return this.getHrMinSecFormat(t * 1000);
+    }
+
+    calcMaxItemsPerSec() {
+        var eTime = this.getCurrentDateByMilSec(new Date()), log2 = false;
+        let i = 0;
+
+        if(log2) {
+            console.log(" ");
+            console.log(" ");
+            console.log("You cannot disable this message:");
+            console.log(" ");
+        }
+
+        for(i = 0; i < 1000000; i++) {
+            var cTime = this.getCurrentDateByMilSec(new Date());
+            var milSecsBetween = cTime - eTime;
+            if(milSecsBetween < 325) {
+                console.log(milSecsBetween + " - " + eTime + " - " + cTime);
+            } else {
+                if(log2) {
+                    console.log(" ");
+                    console.log("You cannot disable the message before");
+                    console.log(" ");
+                    console.log(" ");
+                }
+                
+                var numbersPerSec = Math.round((i - 1) / 1.5);
+                return numbersPerSec;
+            }
+        }
+        return 2000;
+    }
+    
+    refreshMaxItemsPerSec() {
+        window.document.querySelector("[calcTime]").textContent = "Calculating...";
+        var maxItemsPerSec = this.calcMaxItemsPerSec();
+        window.document.querySelector("[calcTime]").textContent = "NumbersPerSecound: " + maxItemsPerSec;
+
+        var pos = npsStats.length;
+        npsStats.push([pos, maxItemsPerSec]);
+        return maxItemsPerSec;
+    }
+}
+
+
 
 function saveIntoTable(id, data) {
     var table = window.document.getElementById(id);
@@ -153,54 +397,4 @@ function saveIntoTable(id, data) {
     }
     table.appendChild(td1);
     table.appendChild(td2);
-}
-
-function estimatedTime(totalAmount, amount, maxFilePerSecound) {
-    var t = Math.round(((totalAmount - amount) / maxFilePerSecound) / 1);
-    if (t < 0) t = 0;
-    return par(t * 1000);
-}
-function par(t) {
-    var d = new Date(t);
-    var hr = (d.getHours() - 1);
-    if (hr < 10) {
-        hr = "0" + hr;
-    }
-    var min = d.getMinutes();
-    if (min < 10) {
-        min = "0" + min;
-    }
-    var sec = d.getSeconds();
-    if (sec < 10) {
-        sec = "0" + sec;
-    }
-    var ampm = "am";
-    if (hr > 12) {
-        hr -= 12;
-        ampm = "pm";
-    }
-    return hr + ":" + min + ":" + sec;
-}
-
-function refresh(n, g, r, rr, amount, maxFilePerSecound, totalAmount, etime) {
-    window.document.querySelector("[c-etime]").textContent = par(etime);
-    window.document.querySelector("[c-display]").textContent = amount;
-    window.document.querySelector("[c-time]").textContent = estimatedTime(totalAmount, amount, maxFilePerSecound);
-    window.document.querySelector("[n-amount-display]").textContent = n;
-    window.document.querySelector("[g-amount-display]").textContent = g;
-    window.document.querySelector("[r-amount-display]").textContent = r;
-    window.document.querySelector("[rr-amount-display]").textContent = rr;
-
-    window.document.querySelector("[n-procent-display]").textContent = procent(n, amount) + "%";
-    window.document.querySelector("[g-procent-display]").textContent = procent(g, amount) + "%";
-    window.document.querySelector("[r-procent-display]").textContent = procent(r, amount) + "%";
-    window.document.querySelector("[rr-procent-display]").textContent = procent(rr, amount) + "%";
-}
-
-function sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-}
-function procent(first, secound) {
-    var num = (first / secound) * 100;
-    return (Math.round(num * 1000000) / 1000000).toFixed(6);
 }
