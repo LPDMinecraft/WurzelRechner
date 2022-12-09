@@ -8,5 +8,20 @@
         "version": "Version",
         "debugLog": "Debbug Log",
         "changeLang": "Change Language"
+    },
+    "numbers": {
+        "natural": "Natural Number",
+        "whole": "Whole Number",
+        "rational": "Ration Number",
+        "reel": "Reel Number"
+    },
+    "types": {
+        "procent": "Procent",
+        "last": "Last",
+        "number": "Number"
+    },
+    "calc": {
+        "normal": "Normal",
+        "sqr": "Square root"
     }
 }
