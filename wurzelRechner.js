@@ -70,7 +70,7 @@ function initVariables() {
 async function generateNumbers() {
     initVariables();
 
-    for (let i = start; i <= fAmount; i++) {
+    for (let i = start; i <= (fAmount - 1); i++) {
         cTime = getTimeManager().getCurrentDateByMilSec();
         if (sq === "nr") current = i;
         if (sq === "sq") current = Math.sqrt(i);
