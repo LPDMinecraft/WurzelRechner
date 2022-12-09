@@ -1,5 +1,5 @@
 var maxFilePerSecound, maxFileWriter, eTime, n, g, r, rr, amount, eTime, currentAmount, fAmount, npsStats, sq, log, system, numType, stats, waiter, cTime, current, start, last;
-var numberManagerClass, timeManagerClass, waitManagerClass, utilsClass;
+var numberManagerClass, timeManagerClass, waitManagerClass, utilsClass, typeManagerClass;
 
 
 
@@ -15,6 +15,9 @@ function getWaitManager() {
 function getUtils() {
     return utilsClass;
 }
+function getTypeManager() {
+    return typeManagerClass;
+}
 
 
 
@@ -28,6 +31,7 @@ window.addEventListener("load", (e) => {
 
 
 function initVariables() {
+    typeManagerClass = new TypeManager();
     numberManagerClass = new NumberManager();
     timeManagerClass = new TimeManager();
     waitManagerClass = new WaitManager();
@@ -36,17 +40,17 @@ function initVariables() {
 
 
     eTime = getTimeManager().getCurrentDateByMilSec();
-    n = 0, g = 0, r = 0, rr = 0, 
-    amount = (window.document.querySelector("[number]").value * 1), 
-    currentAmount = 0;
-    sq = "sq", 
-    log = true,
-    system = "procent", 
-    npsStats = [],
-    numType = "N";
+    n = 0, g = 0, r = 0, rr = 0,
+        amount = (window.document.querySelector("[number]").value * 1),
+        currentAmount = 0;
+    sq = "sq",
+        log = true,
+        system = "procent",
+        npsStats = [],
+        numType = "N";
     maxFilePerSecound = getTimeManager().refreshMaxItemsPerSec();
 
-    
+
 
     if (window.document.querySelector("[option-pro]").selected) system = "procent";
     if (window.document.querySelector("[option-las]").selected) system = "last";
@@ -72,62 +76,20 @@ function initVariables() {
 async function generateNumbers() {
     initVariables();
 
-    for (let i = start; i <= (fAmount - 1); i++) {
-        cTime = getTimeManager().getCurrentDateByMilSec();
-        if (sq === "nr") current = i;
-        if (sq === "sq") current = Math.sqrt(i);
-
-        maxFileWriter = maxFileWriter + (0.4 / maxFilePerSecound);
-        // Normaly its 2.5
-        if(maxFileWriter > 2.5) {
-            maxFileWriter = 0;
-            maxFilePerSecound = getTimeManager().refreshMaxItemsPerSec();
-        }
-        getNumberManager().number(current, i);
-        
-        currentAmount++;
-        waiter++;
-
-
-        if (system == "procent") {
-            if (numType == "N") {
-                stats.push([i, getUtils().procent(n, currentAmount)]);
-            } else if (numType == "G") {
-                stats.push([i, getUtils().procent(g, currentAmount)]);
-            } else if (numType == "R") {
-                stats.push([i, getUtils().procent(r, currentAmount)]);
-            } else if (numType == "RR") {
-                stats.push([i, getUtils().procent(rr, currentAmount)]);
-            }
-        }
-        if (system == "last") stats.push([i, last]);
-        if (system == "number") stats.push([i, last]);
-
-
-        var currentMilSec = getTimeManager().getCurrentDateByMilSec();
-        if(log) console.log(currentMilSec);
-        refreshWindow();
-        if (waiter > maxFilePerSecound) {
-            waiter = 0;
-            var time = currentMilSec - cTime;
-            await getWaitManager().timeoutWithAsync(500 - time);
-        }
-    }
-    if(log) console.log(stats);
-    openFile();
-    openNPSFile();
-
-    //saveIntoTable("even", nStats);
+    if(system == "procent") getTypeManager().generateNumbers_Procent();
+    else if(system == "last") getTypeManager().generateNumbers_Last();
+    else if(system == "number") getTypeManager().generateNumbers_Number();
+    else console.error("Did not find the System Type");
 }
 
 function createFile() {
-    let 
-    csvContent = "data:text/csv;charset=utf-8," + stats.map(e => e.join(",")).join("\n"),
-    encodedUri = encodeURI(csvContent);
+    let
+        csvContent = "data:text/csv;charset=utf-8," + stats.map(e => e.join(",")).join("\n"),
+        encodedUri = encodeURI(csvContent);
 
-    var 
-    version = "v" + window.document.querySelector("[version]").value, 
-    fileName = "flourish_____" + start + "_" + amount + "___";
+    var
+        version = "v" + window.document.querySelector("[version]").value,
+        fileName = "flourish_____" + start + "_" + amount + "___";
 
     if (numType == "N") fileName = fileName + "N_";
     else if (numType == "G") fileName = fileName + "G_";
@@ -146,9 +108,9 @@ function createFile() {
     return [encodedUri, fileName];
 }
 function openFile() {
-    var 
-    fileData = createFile(),
-    link = document.createElement("a");
+    var
+        fileData = createFile(),
+        link = document.createElement("a");
 
     link.setAttribute("href", fileData[0]);
     link.setAttribute("download", fileData[1]);
@@ -158,18 +120,18 @@ function openFile() {
     return fileData;
 }
 function createNPSFile() {
-    let 
-    csvContent = "data:text/csv;charset=utf-8," + npsStats.map(e => e.join(",")).join("\n"),
-    encodedUri = encodeURI(csvContent);
+    let
+        csvContent = "data:text/csv;charset=utf-8," + npsStats.map(e => e.join(",")).join("\n"),
+        encodedUri = encodeURI(csvContent);
 
     var fileName = "npsFile-" + (getTimeManager().getCurrentDateByMilSec() * 1);
 
     return [encodedUri, fileName];
 }
 function openNPSFile() {
-    var 
-    fileData = createNPSFile(),
-    link = document.createElement("a");
+    var
+        fileData = createNPSFile(),
+        link = document.createElement("a");
 
     link.setAttribute("href", fileData[0]);
     link.setAttribute("download", fileData[1]);
@@ -190,7 +152,7 @@ async function refreshWindow() {
     var currentMilSec = getTimeManager().getCurrentDateByMilSec();
     var etime = ((currentMilSec - eTime) / 2);
 
-    if(etime > 0) window.document.querySelector("[c-etime]").textContent = getTimeManager().getHrMinSecMillisecFormat(etime);
+    if (etime > 0) window.document.querySelector("[c-etime]").textContent = getTimeManager().getHrMinSecMillisecFormat(etime);
     window.document.querySelector("[c-display]").textContent = currentAmount;
     window.document.querySelector("[c-time]").textContent = getTimeManager().calcRemainingTime(currentAmount, amount, maxFilePerSecound);
     window.document.querySelector("[n-amount-display]").textContent = n;
@@ -207,7 +169,7 @@ async function refreshWindow() {
 
 
 class Utils {
-    constructor() {}
+    constructor() { }
 
     procent(first, secound) {
         var num = (first / secound) * 100;
@@ -216,11 +178,11 @@ class Utils {
 }
 
 class NumberManager {
-    constructor() {}
+    constructor() { }
 
     countDecimals(value) {
-        if(Math.floor(value) === value) return 0;
-        return value.toString().split(".")[1].length || 0; 
+        if (Math.floor(value) === value) return 0;
+        return value.toString().split(".")[1].length || 0;
     }
     hasDecimals(value, lenght) {
         return this.countDecimals(value) == lenght;
@@ -280,7 +242,7 @@ class NumberManager {
 }
 
 class WaitManager {
-    constructor() {}
+    constructor() { }
     static done = true;
 
     timeoutWithAsync(ms) {
@@ -298,7 +260,7 @@ class WaitManager {
 }
 
 class TimeManager {
-    constructor() {}
+    constructor() { }
 
     getDateByMilSec(date) {
         return date.getTime();
@@ -313,7 +275,7 @@ class TimeManager {
         var hr = (d.getHours() - 1);
         if (hr < 10) {
             format = format + "0" + hr + ":";
-        } else if(hr < 1) {
+        } else if (hr < 1) {
             format = format;
         } else {
             format = format + hr + ":";
@@ -322,7 +284,7 @@ class TimeManager {
         var min = d.getMinutes();
         if (min < 10) {
             format = format + "0" + min + ":";
-        } else if(min < 1 && hr < 1) {
+        } else if (min < 1 && hr < 1) {
             format = format;
         } else {
             format = format + min + ":";
@@ -343,11 +305,11 @@ class TimeManager {
         var format = this.getHrMinSecFormat(milisecounds);
 
         var milsec = d.getMilliseconds();
-        if(milsec < 100) {
+        if (milsec < 100) {
             format = format + ":0" + milsec;
-        } else if(milsec < 10) {
+        } else if (milsec < 10) {
             format = format + ":00" + milsec;
-        } else if(milsec < 1) {
+        } else if (milsec < 1) {
             format = format;
         } else {
             format = format + ":" + milsec;
@@ -365,33 +327,33 @@ class TimeManager {
         var eTime = this.getCurrentDateByMilSec(new Date()), log2 = false;
         let i = 0;
 
-        if(log2) {
+        if (log2) {
             console.log(" ");
             console.log(" ");
             console.log("You cannot disable this message:");
             console.log(" ");
         }
 
-        for(i = 0; i < 1000000; i++) {
+        for (i = 0; i < 1000000; i++) {
             var cTime = this.getCurrentDateByMilSec(new Date());
             var milSecsBetween = cTime - eTime;
-            if(milSecsBetween < 325) {
+            if (milSecsBetween < 325) {
                 console.log(milSecsBetween + " - " + eTime + " - " + cTime);
             } else {
-                if(log2) {
+                if (log2) {
                     console.log(" ");
                     console.log("You cannot disable the message before");
                     console.log(" ");
                     console.log(" ");
                 }
-                
+
                 var numbersPerSec = Math.round((i - 1) / 1.5);
                 return numbersPerSec;
             }
         }
         return 2000;
     }
-    
+
     refreshMaxItemsPerSec() {
         window.document.querySelector("[calcTime]").textContent = "Calculating...";
         var maxItemsPerSec = this.calcMaxItemsPerSec();
@@ -400,6 +362,135 @@ class TimeManager {
         var pos = npsStats.length;
         npsStats.push([pos, maxItemsPerSec]);
         return maxItemsPerSec;
+    }
+}
+
+
+
+class TypeManager {
+    constructor() {}
+
+    async generateNumbers_Procent() {
+        initVariables();
+    
+        for (let i = start; i <= (fAmount - 1); i++) {
+            cTime = getTimeManager().getCurrentDateByMilSec();
+            if (sq === "nr") current = i;
+            if (sq === "sq") current = Math.sqrt(i);
+    
+            maxFileWriter = maxFileWriter + (0.4 / maxFilePerSecound);
+            // Normaly its 2.5
+            if (maxFileWriter > 2.5) {
+                maxFileWriter = 0;
+                maxFilePerSecound = getTimeManager().refreshMaxItemsPerSec();
+            }
+            getNumberManager().number(current, i);
+    
+            currentAmount++;
+            waiter++;
+    
+    
+            if (numType == "N") {
+                stats.push([i, getUtils().procent(n, currentAmount)]);
+            } else if (numType == "G") {
+                stats.push([i, getUtils().procent(g, currentAmount)]);
+            } else if (numType == "R") {
+                stats.push([i, getUtils().procent(r, currentAmount)]);
+            } else if (numType == "RR") {
+                stats.push([i, getUtils().procent(rr, currentAmount)]);
+            }
+    
+    
+            var currentMilSec = getTimeManager().getCurrentDateByMilSec();
+            if (log) console.log(currentMilSec);
+            refreshWindow();
+            if (waiter > maxFilePerSecound) {
+                waiter = 0;
+                var time = currentMilSec - cTime;
+                await getWaitManager().timeoutWithAsync(500 - time);
+            }
+        }
+        if (log) console.log(stats);
+        openFile();
+        openNPSFile();
+    
+        //saveIntoTable("even", nStats);
+    }
+    async generateNumbers_Last() {
+        initVariables();
+    
+        for (let i = start; i <= (fAmount - 1); i++) {
+            cTime = getTimeManager().getCurrentDateByMilSec();
+            if (sq === "nr") current = i;
+            if (sq === "sq") current = Math.sqrt(i);
+    
+            maxFileWriter = maxFileWriter + (0.4 / maxFilePerSecound);
+            // Normaly its 2.5
+            if (maxFileWriter > 2.5) {
+                maxFileWriter = 0;
+                maxFilePerSecound = getTimeManager().refreshMaxItemsPerSec();
+            }
+            getNumberManager().number(current, i);
+    
+            currentAmount++;
+            waiter++;
+    
+    
+            stats.push([i, last]);
+    
+    
+            var currentMilSec = getTimeManager().getCurrentDateByMilSec();
+            if (log) console.log(currentMilSec);
+            refreshWindow();
+            if (waiter > maxFilePerSecound) {
+                waiter = 0;
+                var time = currentMilSec - cTime;
+                await getWaitManager().timeoutWithAsync(500 - time);
+            }
+        }
+        if (log) console.log(stats);
+        openFile();
+        openNPSFile();
+    
+        //saveIntoTable("even", nStats);
+    }
+    async generateNumbers_Number() {
+        initVariables();
+    
+        for (let i = start; i <= (fAmount - 1); i++) {
+            cTime = getTimeManager().getCurrentDateByMilSec();
+            if (sq === "nr") current = i;
+            if (sq === "sq") current = Math.sqrt(i);
+    
+            maxFileWriter = maxFileWriter + (0.4 / maxFilePerSecound);
+            // Normaly its 2.5
+            if (maxFileWriter > 2.5) {
+                maxFileWriter = 0;
+                maxFilePerSecound = getTimeManager().refreshMaxItemsPerSec();
+            }
+            getNumberManager().number(current, i);
+    
+            currentAmount++;
+            waiter++;
+    
+    
+            stats.push([i, last]);
+    
+    
+            var currentMilSec = getTimeManager().getCurrentDateByMilSec();
+            if (log) console.log(currentMilSec);
+            refreshWindow();
+            if (waiter > maxFilePerSecound) {
+                waiter = 0;
+                var time = currentMilSec - cTime;
+                await getWaitManager().timeoutWithAsync(500 - time);
+            }
+        }
+        if (log) console.log(stats);
+        openFile();
+        openNPSFile();
+    
+        //saveIntoTable("even", nStats);
     }
 }
 
