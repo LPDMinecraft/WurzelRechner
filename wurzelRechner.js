@@ -61,7 +61,7 @@ function initVariables() {
 
     stats = [], start = (window.document.querySelector("[start]").value * 1);
     waiter = 0, maxFileWriter = 0, fAmount = start + amount, last = 100;
-    stats.push(["Zahl", "Wert"]);
+    stats.push(["Pos", "Number"]);
 
     if (system == "last") last = 100;
     if (system == "number") last = 0;
@@ -225,7 +225,7 @@ class NumberManager {
     }
 
     number(current, i) {
-        if (this.isNatuerlicheZahl(current)) {
+        if (this.isNaturalNumber(current)) {
             if (log) console.log(i + " N - " + current);
             if (numType === "N") {
                 if (system == "last") last = 100;
@@ -234,7 +234,7 @@ class NumberManager {
                 if (system == "last") last = last - 1;
             }
             n++;
-        } else if (this.isGanzeZahl(current)) {
+        } else if (this.isWholeNumber(current)) {
             if (log) console.log(i + " G - " + current);
             if (numType == "G") {
                 if (system == "last") last = 100;
@@ -243,7 +243,7 @@ class NumberManager {
                 if (system == "last") last = last - 1;
             }
             g++;
-        } else if (this.isRationaleZahl(current)) {
+        } else if (this.isRationalNumber(current)) {
             if (log) console.log(i + " R - " + current);
             if (numType == "R") {
                 if (system == "last") last = 100;
@@ -252,7 +252,7 @@ class NumberManager {
                 if (system == "last") last = last - 1;
             }
             r++;
-        } else if (this.isReeleZahl(current)) {
+        } else if (this.isReeleNumber(current)) {
             if (log) console.log(i + " RR - " + current);
             if (numType == "RR") {
                 if (system == "last") last = 100;
@@ -263,16 +263,16 @@ class NumberManager {
             rr++;
         }
     }
-    isNatuerlicheZahl(current) {
+    isNaturalNumber(current) {
         return Number.isInteger(current) && current > 0;
     }
-    isGanzeZahl(current) {
+    isWholeNumber(current) {
         return Number.isInteger(current);
     }
-    isRationaleZahl(current) {
+    isRationalNumber(current) {
         return !Number.isInteger(current) && !this.hasDecimals(current, 12);
     }
-    isReeleZahl(current) {
+    isReeleNumber(current) {
         return !Number.isInteger(current) && this.hasDecimals(current, 12);
     }
 }
@@ -393,7 +393,7 @@ class TimeManager {
     refreshMaxItemsPerSec() {
         window.document.querySelector("[calcTime]").textContent = "Calculating...";
         var maxItemsPerSec = this.calcMaxItemsPerSec();
-        window.document.querySelector("[calcTime]").textContent = "NumbersPerSecound: " + maxItemsPerSec;
+        window.document.querySelector("[calcTime]").textContent = "Numbers per secound: " + maxItemsPerSec;
 
         var pos = npsStats.length;
         npsStats.push([pos, maxItemsPerSec]);
