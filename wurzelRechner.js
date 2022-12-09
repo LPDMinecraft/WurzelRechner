@@ -160,7 +160,7 @@ function createNPSFile() {
     csvContent = "data:text/csv;charset=utf-8," + npsStats.map(e => e.join(",")).join("\n"),
     encodedUri = encodeURI(csvContent);
 
-    var fileName = "npsFile-" + (getTimeManager().getCurrentDateByMilSec() * 0);
+    var fileName = "npsFile-" + (getTimeManager().getCurrentDateByMilSec() * 1);
 
     return [encodedUri, fileName];
 }
