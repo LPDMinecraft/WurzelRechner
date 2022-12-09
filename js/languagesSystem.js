@@ -1,4 +1,4 @@
-const defaultLocale = "en";
+const defaultLocale = "de";
 const supportedLocales = ["en", "de"];
 
 let locale;
@@ -154,7 +154,7 @@ function doesFileExist(urlToFile) {
 
 function translatePage() {
     var allTranslableElements = getAllTranslableElements();
-    
+
     console.log("Found translable Elements: " + allTranslableElements.length);
     console.log(allTranslableElements);
     console.log("Translating all Objects...");

@@ -6,6 +6,7 @@
         "searchType": "Typ (suche)",
         "calculateType": "Typ (rechnen)",
         "version": "Version",
-        "debugLog": "Debbug Log"
+        "debugLog": "Debbug Log",
+        "changeLang": "Ändere die Sprache"
     }
 }
