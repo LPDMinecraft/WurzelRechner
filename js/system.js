@@ -388,7 +388,7 @@ class TimeManager {
         console.log("Sended own messages");
         console.log(fMessages);
         
-        return Math.round(numbersPerSec / 2.8);
+        return Math.round(numbersPerSec / 2);
     }
 
     refreshMaxItemsPerSec() {
