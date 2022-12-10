@@ -120,26 +120,21 @@ async fetchTranslationsFor(newLocale) {
 
     for (var i = 0; i < this.sizeAllCategories(); i++) {
         var currentCategorie = categories[i];
-        var defpath = `../lang/` + currentCategorie + `/${newLocale}.json`;
+        const defpath = `./lang/` + currentCategorie + `/${newLocale}.json`;
         var path = ``;
         var found = false;
-        var response = await fetch(defpath);
 
-        if (!this.doesFileExist(path + defpath)) {
-            defpath = `./lang/` + currentCategorie + `/${newLocale}.json`;
-            response = await fetch(defpath);
-        }
-        
-        while (found) {
-            response = fetch(path + defpath);
+        var response = await fetch(defpath);
+        while (!found) {
             if (this.doesFileExist(path + defpath)) {
-                found = true;
+                response = await fetch(path + defpath);
+                if(response.status != "404") {
+                    found = true;
+                    break;
+                }
             }
             path = path + `../`;
             response = fetch(path + defpath);
-            if (this.doesFileExist(path + defpath)) {
-                found = true;
-            }
         }
         var json = await response.json();
 
