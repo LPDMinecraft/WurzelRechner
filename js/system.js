@@ -69,7 +69,6 @@ function initVariables() {
 
     stats = [], start = (window.document.querySelector("[start]").value * 1);
     waiter = 0, maxFileWriter = 0, fAmount = start + amount, last = 100;
-    stats.push(["Pos", "Number"]);
 
     if (system == "last") last = 100;
     if (system == "number") last = 0;
@@ -221,7 +220,7 @@ class NumberManager {
         if (this.isNaturalNumber(current)) {
             if (log) console.log(i + " N - " + current);
             if (numType === "N") {
-                if (system == "last") last = 100;
+                if (system == "last") last = 1000;
                 if (system == "number") last++;
             } else {
                 if (system == "last") last = last - 1;
@@ -230,7 +229,7 @@ class NumberManager {
         } else if (this.isWholeNumber(current)) {
             if (log) console.log(i + " G - " + current);
             if (numType == "G") {
-                if (system == "last") last = 100;
+                if (system == "last") last = 1000;
                 if (system == "number") last++;
             } else {
                 if (system == "last") last = last - 1;
@@ -239,7 +238,7 @@ class NumberManager {
         } else if (this.isRationalNumber(current)) {
             if (log) console.log(i + " R - " + current);
             if (numType == "R") {
-                if (system == "last") last = 100;
+                if (system == "last") last = 1000;
                 if (system == "number") last++;
             } else {
                 if (system == "last") last = last - 1;
@@ -248,7 +247,7 @@ class NumberManager {
         } else if (this.isReeleNumber(current)) {
             if (log) console.log(i + " RR - " + current);
             if (numType == "RR") {
-                if (system == "last") last = 100;
+                if (system == "last") last = 1000;
                 if (system == "number") last++;
             } else {
                 if (system == "last") last = last - 1;
@@ -414,6 +413,7 @@ class TypeManager {
 
     async generateNumbers_Procent() {
         initVariables();
+        stats.push(["Pos", "Procent"]);
     
         for (let i = start; i <= (fAmount - 1); i++) {
             cTime = getTimeManager().getCurrentDateByMilSec();
@@ -465,6 +465,7 @@ class TypeManager {
     }
     async generateNumbers_Last() {
         initVariables();
+        stats.push(["Pos", "Last-Number"]);
     
         for (let i = start; i <= (fAmount - 1); i++) {
             cTime = getTimeManager().getCurrentDateByMilSec();
@@ -508,6 +509,7 @@ class TypeManager {
     }
     async generateNumbers_Number() {
         initVariables();
+        stats.push(["Pos", "Amount"]);
     
         for (let i = start; i <= (fAmount - 1); i++) {
             cTime = getTimeManager().getCurrentDateByMilSec();
