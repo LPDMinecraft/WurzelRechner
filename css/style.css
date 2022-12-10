@@ -15,11 +15,12 @@ p {
     color: black;
 }
 a {
+    font-size: 25px;
     text-decoration: none;
-    color: black;
+    color: #0099cc;
 }
 a:hover {
-    color: gray;
+    color: #3366cc;
 }
 .left {
     text-align: left;
