@@ -1,8 +1,6 @@
 var maxFilePerSecound, maxFileWriter, eTime, n, g, r, rr, amount, eTime, currentAmount, fAmount, npsStats, sq, log, system, numType, stats, waiter, cTime, current, start, last;
 var numberManagerClass, timeManagerClass, waitManagerClass, languagesManager_utilsClass, typeManagerClass;
 
-
-
 function getNumberManager() {
     return numberManagerClass;
 }
