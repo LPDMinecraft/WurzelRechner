@@ -73,13 +73,39 @@ function initVariables() {
     if (system == "number") last = 0;
 }
 
-async function generateNumbers() {
+function generateNumbers() {
     initVariables();
+    toggleLocalSwiter(false);
 
     if(system == "procent") getTypeManager().generateNumbers_Procent();
     else if(system == "last") getTypeManager().generateNumbers_Last();
     else if(system == "number") getTypeManager().generateNumbers_Number();
     else console.error("Did not find the System Type");
+}
+
+
+function toggleLocalSwiter(bool) {
+    var buttons = languagesManager_getButtonManager().getAllLocaleSwitcherButtons();
+    var text = document.querySelectorAll("[localeSwitchText]");
+    if(!bool) {
+        for(var i = 0; i < buttons.length; i++) {
+            if(buttons[i] != undefined) {
+                buttons[i].setAttribute("hidden", true);
+            }
+        }
+        for(var i = 0; i < text.length; i++) {
+            text[i].setAttribute("hidden", true);
+        }
+    } else {
+        for(var i = 0; i < buttons.length; i++) {
+            if(buttons[i] != undefined) {
+                buttons[i].removeAttribute("hidden");
+            }
+        }
+        for(var i = 0; i < text.length; i++) {
+            text[i].removeAttribute("hidden");
+        }
+    }
 }
 
 function createFile() {
@@ -430,6 +456,7 @@ class TypeManager {
         setTimeout(1000 * 2, () => {
             getTimeManager().resetMaxItemsPerSecDisplay();
         });
+        toggleLocalSwiter(true);
         //saveIntoTable("even", nStats);
     }
     async generateNumbers_Last() {
@@ -471,6 +498,7 @@ class TypeManager {
         setTimeout(1000 * 2, () => {
             getTimeManager().resetMaxItemsPerSecDisplay();
         });
+        toggleLocalSwiter(true);
         //saveIntoTable("even", nStats);
     }
     async generateNumbers_Number() {
@@ -512,6 +540,7 @@ class TypeManager {
         setTimeout(1000 * 2, () => {
             getTimeManager().resetMaxItemsPerSecDisplay();
         });
+        toggleLocalSwiter(true);
         //saveIntoTable("even", nStats);
     }
 }
