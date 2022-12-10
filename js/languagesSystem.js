@@ -125,6 +125,10 @@ async fetchTranslationsFor(newLocale) {
         var found = false;
 
         const response = await fetch(defpath);
+        if (!this.doesFileExist(path + defpath)) {
+            defpath = `./lang/` + currentCategorie + `/${newLocale}.json`;
+            response = await fetch(defpath);
+        }
         while (found) {
             response = fetch(path + defpath);
             if (this.doesFileExist(path + defpath)) {
