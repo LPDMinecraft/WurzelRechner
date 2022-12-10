@@ -326,34 +326,42 @@ class TimeManager {
     }
 
     calcMaxItemsPerSec() {
-        var eTime = this.getCurrentDateByMilSec(new Date()), log2 = true;
+        var eTime = this.getCurrentDateByMilSec(new Date());
         let i = 0;
-
-        if (log2) {
-            console.log(" ");
-            console.log(" ");
-            console.log("You cannot disable this message:");
-            console.log(" ");
-        }
+        const consoleLogMethod = console.log;
+        var messages = [];
+        var fMessages = [];
+        var numbersPerSec = 28000;
+        console.log = function(msg) {
+            if(msg.split(" - ").length != 3) {
+                messages[messages.length] = msg;
+            } else {
+                fMessages[fMessages.length] = msg;
+            }
+        };
 
         for (i = 0; i < 1000000; i++) {
             var cTime = this.getCurrentDateByMilSec(new Date());
             var milSecsBetween = cTime - eTime;
             if (milSecsBetween < 325) {
-                if(log2) console.log(milSecsBetween + " - " + eTime + " - " + cTime);
+                console.log(milSecsBetween + " - " + eTime + " - " + cTime);
             } else {
-                if (log2) {
-                    console.log(" ");
-                    console.log("You cannot disable the message before");
-                    console.log(" ");
-                    console.log(" ");
-                }
-
-                var numbersPerSec = Math.round((i - 1) / 1.5);
-                return numbersPerSec;
+                numbersPerSec = Math.round((i - 1) / 1.5);
+                break;
             }
         }
-        return 2000;
+        console.log = consoleLogMethod;
+        for(var msg in messages) {
+            console.log(msg);
+        }
+        console.log(" ");
+        console.log("Sended own messages");
+        console.log(fMessages);
+        console.log(" ");
+        console.log("Sended  messages");
+        console.log(messages);
+        console.log(" ");
+        return Math.round(numbersPerSec / 2.8);
     }
 
     refreshMaxItemsPerSec() {
