@@ -1,5 +1,5 @@
 # WurzelRechner
-This is a small project(spend 14 hours coding it) for you to test it out.
+This is a small project(spend 14 hours coding it) with almost 1.000 list of code for you to test it out.
 <br>
 ## Examples
 You can use [flourish](https://app.flourish.studio) to create something like these:
