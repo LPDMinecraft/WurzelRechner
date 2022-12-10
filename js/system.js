@@ -62,8 +62,10 @@ function initVariables() {
     if (window.document.querySelector("[option-rr]").selected) numType = "RR";
 
     log = window.document.querySelector("[loggin]").checked;
+
     if (window.document.querySelector("[option-nro]").selected) sq = "nr";
     if (window.document.querySelector("[option-sqr]").selected) sq = "sq";
+    if (window.document.querySelector("[option-cbrt]").selected) sq = "cbrt";
 
     stats = [], start = (window.document.querySelector("[start]").value * 1);
     waiter = 0, maxFileWriter = 0, fAmount = start + amount, last = 100;
@@ -128,6 +130,7 @@ function createFile() {
 
     if (sq == "nr") fileName = fileName + "nr___";
     else if (sq == "sq") fileName = fileName + "sq___";
+    else if (sq == "cbrt") fileName = fileName + "cbrt___";
 
     fileName = fileName + version + ".csv";
 
@@ -416,6 +419,7 @@ class TypeManager {
             cTime = getTimeManager().getCurrentDateByMilSec();
             if (sq === "nr") current = i;
             if (sq === "sq") current = Math.sqrt(i);
+            if (sq === "cbrt") current = Math.cbrt(i);
     
             maxFileWriter = maxFileWriter + (0.4 / maxFilePerSecound);
             // Normaly its 2.5
@@ -466,6 +470,7 @@ class TypeManager {
             cTime = getTimeManager().getCurrentDateByMilSec();
             if (sq === "nr") current = i;
             if (sq === "sq") current = Math.sqrt(i);
+            if (sq === "cbrt") current = Math.cbrt(i);
     
             maxFileWriter = maxFileWriter + (0.4 / maxFilePerSecound);
             // Normaly its 2.5
@@ -508,6 +513,7 @@ class TypeManager {
             cTime = getTimeManager().getCurrentDateByMilSec();
             if (sq === "nr") current = i;
             if (sq === "sq") current = Math.sqrt(i);
+            if (sq === "cbrt") current = Math.cbrt(i);
     
             maxFileWriter = maxFileWriter + (0.4 / maxFilePerSecound);
             // Normaly its 2.5

@@ -22,6 +22,7 @@
     },
     "calc": {
         "normal": "Normal",
-        "sqr": "Square root"
+        "sqr": "Square root",
+        "cbrt": "Cube Root"
     }
 }

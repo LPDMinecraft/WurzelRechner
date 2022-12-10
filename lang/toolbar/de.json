@@ -22,6 +22,7 @@
     },
     "calc": {
         "normal": "Normal",
-        "sqr": "Quadratwurzel"
+        "sqr": "Quadratwurzel",
+        "cbrt": "Kubikwurzel"
     }
 }
