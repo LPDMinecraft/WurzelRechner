@@ -20,7 +20,7 @@ function getTypeManager() {
 
 
 window.addEventListener("load", (e) => {
-    initLangauages();
+    initLanguages();
     languagesManager_getLocalesManager().setLocale(defaultLocale);
 });
 function startSystem() {

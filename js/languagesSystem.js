@@ -6,7 +6,7 @@ var languagesManager_localesManagerClass, languagesManager_fileManagerClass, lan
 let locale;
 let translations = {};
 
-function initLangauages() {
+function initLanguages() {
     languagesManager_localesManagerClass = new languagesManager_LocalesManager();
     languagesManager_fileManagerClass = new languagesManager_FileManager();
     languagesManager_buttonManagerClass = new languagesManager_ButtonManager();
