@@ -5,6 +5,7 @@
     "sentences": {
         "press": "Warte auf den Knopfdruck",
         "numbersPerSecound": "Nummern pro Sekunde: %n%",
-        "calculating": "Berechnen..."
+        "calculating": "Berechnen...",
+        "bugsAndsuggestions": "Hier kannst du Sachen vorschlagen oder Bugs melden"
     }
 }

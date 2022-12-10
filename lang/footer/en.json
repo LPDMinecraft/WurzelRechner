@@ -5,6 +5,7 @@
     "sentences": {
         "press": "Wating to press button",
         "numbersPerSecound": "Numbers per secound: %n%",
-        "calculating": "Calculating..."
+        "calculating": "Calculating...",
+        "bugsAndsuggestions": "Here you can suggest and report bugs"
     }
 }

@@ -14,6 +14,13 @@ p {
     font-size: 35px;
     color: black;
 }
+a {
+    text-decoration: none;
+    color: black;
+}
+a:hover {
+    color: gray;
+}
 .left {
     text-align: left;
 }

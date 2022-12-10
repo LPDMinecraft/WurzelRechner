@@ -1,8 +1,17 @@
 <!DOCTYPE html>
 
 <head>
-    <title>HowMany</title>
+    <title>Special Calculator</title>
+
+    <meta content="Special Calculator" property="og:title" />
+    <meta content="This is a special calculator to calculate everything in high amounts." property="og:description" />
+    <meta content="https://lpdminecraft.github.io/WurzelRechner/" property="og:url" />
+    <meta content="imgs/square_root_2.png" property="og:image" />
+    <meta content="#0066ff" data-react-helmet="true" name="theme-color" />
+
     <link rel="stylesheet" href="css/style.css">
+    <link rel="icon" href="imgs/square_root_2.png">
+
     <script type="text/javascript" src="js/languagesSystem.js"></script>
     <script type="text/javascript" src="js/system.js"></script>
 </head>
@@ -112,6 +121,7 @@
         </table>
         <button data-i18n="footer:words.calc" onclick='generateNumbers();'>Calculate</button>
         <p data-i18n="footer:sentences.press" calcTime>Wating to press button</p>
+        <p><a data-i18n="footer:sentences.bugsAndsuggestions" target="_blank" href="https://github.com/LPDMinecraft/WurzelRechner/issues">Here you can suggest and report bugs</a></p>
         <table id="even"></table>
     </center>
 </body>

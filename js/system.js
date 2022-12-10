@@ -1,5 +1,5 @@
 var maxFilePerSecound, maxFileWriter, eTime, n, g, r, rr, amount, eTime, currentAmount, fAmount, npsStats, sq, log, system, numType, stats, waiter, cTime, current, start, last;
-var numberManagerClass, timeManagerClass, waitManagerClass, utilsClass, typeManagerClass;
+var numberManagerClass, timeManagerClass, waitManagerClass, languagesManager_utilsClass, typeManagerClass;
 
 
 
@@ -12,8 +12,8 @@ function getTimeManager() {
 function getWaitManager() {
     return waitManagerClass;
 }
-function getUtils() {
-    return utilsClass;
+function languagesManager_getUtils() {
+    return languagesManager_utilsClass;
 }
 function getTypeManager() {
     return typeManagerClass;
@@ -22,11 +22,13 @@ function getTypeManager() {
 
 
 window.addEventListener("load", (e) => {
-    setLocale(defaultLocale);
-
+    initLangauages();
+    languagesManager_getLocalesManager().setLocale(defaultLocale);
+});
+function startSystem() {
     initVariables();
     windowRefresher();
-});
+}
 
 
 
@@ -35,7 +37,7 @@ function initVariables() {
     numberManagerClass = new NumberManager();
     timeManagerClass = new TimeManager();
     waitManagerClass = new WaitManager();
-    utilsClass = new Utils();
+    languagesManager_utilsClass = new Utils();
 
 
 
@@ -160,10 +162,10 @@ async function refreshWindow() {
     window.document.querySelector("[r-amount-display]").textContent = r;
     window.document.querySelector("[rr-amount-display]").textContent = rr;
 
-    window.document.querySelector("[n-procent-display]").textContent = getUtils().procent(n, currentAmount) + "%";
-    window.document.querySelector("[g-procent-display]").textContent = getUtils().procent(g, currentAmount) + "%";
-    window.document.querySelector("[r-procent-display]").textContent = getUtils().procent(r, currentAmount) + "%";
-    window.document.querySelector("[rr-procent-display]").textContent = getUtils().procent(rr, currentAmount) + "%";
+    window.document.querySelector("[n-procent-display]").textContent = languagesManager_getUtils().procent(n, currentAmount) + "%";
+    window.document.querySelector("[g-procent-display]").textContent = languagesManager_getUtils().procent(g, currentAmount) + "%";
+    window.document.querySelector("[r-procent-display]").textContent = languagesManager_getUtils().procent(r, currentAmount) + "%";
+    window.document.querySelector("[rr-procent-display]").textContent = languagesManager_getUtils().procent(rr, currentAmount) + "%";
 }
 
 
@@ -355,8 +357,8 @@ class TimeManager {
     }
 
     refreshMaxItemsPerSec() {
-        window.document.querySelector("[calcTime]").textContent = getTranslation("footer:sentences.calculating").toString(); 
-        var calc = getTranslation("footer:sentences.numbersPerSecound").toString();
+        window.document.querySelector("[calcTime]").textContent = languagesManager_getTranslationSystem().getTranslation("footer:sentences.calculating").toString(); 
+        var calc = languagesManager_getTranslationSystem().getTranslation("footer:sentences.numbersPerSecound").toString();
         var maxItemsPerSec = this.calcMaxItemsPerSec();
 
         window.document.querySelector("[calcTime]").textContent = calc.replace("%n%", maxItemsPerSec);
@@ -366,7 +368,7 @@ class TimeManager {
         return maxItemsPerSec;
     }
     resetMaxItemsPerSecDisplay() {
-        window.document.querySelector("[calcTime]").textContent = getTranslation("footer:sentences.press").toString();
+        window.document.querySelector("[calcTime]").textContent = languagesManager_getTranslationSystem().getTranslation("footer:sentences.press").toString();
     }
 }
 
@@ -396,13 +398,13 @@ class TypeManager {
     
     
             if (numType == "N") {
-                stats.push([i, getUtils().procent(n, currentAmount)]);
+                stats.push([i, languagesManager_getUtils().procent(n, currentAmount)]);
             } else if (numType == "G") {
-                stats.push([i, getUtils().procent(g, currentAmount)]);
+                stats.push([i, languagesManager_getUtils().procent(g, currentAmount)]);
             } else if (numType == "R") {
-                stats.push([i, getUtils().procent(r, currentAmount)]);
+                stats.push([i, languagesManager_getUtils().procent(r, currentAmount)]);
             } else if (numType == "RR") {
-                stats.push([i, getUtils().procent(rr, currentAmount)]);
+                stats.push([i, languagesManager_getUtils().procent(rr, currentAmount)]);
             }
     
     
