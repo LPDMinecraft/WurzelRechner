@@ -358,9 +358,9 @@ class TimeManager {
         console.log("Sended own messages");
         console.log(fMessages);
         console.log(" ");
-        console.log("Sended  messages");
-        console.log(messages);
-        console.log(" ");
+        console.log("Sended own messages");
+        console.log(fMessages);
+        
         return Math.round(numbersPerSec / 2.8);
     }
 
